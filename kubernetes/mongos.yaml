@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: mongodb-replicaset
+  name: mongos
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongodb-replicaset
+        component: mongos
+    spec:
+      containers:
+        - name: mongos
+          image: mongo:3.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: mongodb
+              containerPort: 27017
+          command:
+            - mongos
+            - --configdb=config0/mongo-cfg-mongodb-replicaset-0.mongo-cfg-mongodb-replicaset:27017,mongo-cfg-mongodb-replicaset-1.mongo-cfg-mongodb-replicaset:27017,mongo-cfg-mongodb-replicaset-2.mongo-cfg-mongodb-replicaset:27017
+            - --port=27017
+            - --bind_ip=0.0.0.0
